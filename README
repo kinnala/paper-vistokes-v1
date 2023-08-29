@@ -28,12 +28,19 @@ and included them within the Zenodo archive of this repository under
 
 This has been achieved by running commands such as
 
->> python3 -m pip download -r requirements.txt -d deps/manylinux2014_x86_64 --platform manylinux2014_x86_64 --only-binary=:all:
+>> python3 -m pip download \
+           -r requirements.txt \
+           -d deps/manylinux2014_x86_64 \
+	   --platform manylinux2014_x86_64 \
+	   --only-binary=:all:
 
 This directory of dependencies can be used during installation as
 follows:
 
->> python3 -m pip install --no-index -f ./deps/manylinux2014_x86_64 -r requirements.txt
+>> python3 -m pip install \
+           --no-index \
+	   -f ./deps/manylinux2014_x86_64 \
+	   -r requirements.txt
 
 In case the platforms have become unavailable, the best option is to
 rely on virtualization of one of the platforms.
