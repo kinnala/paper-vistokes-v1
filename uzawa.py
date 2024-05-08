@@ -4,11 +4,9 @@ import matplotlib.pyplot as plt
 from scipy.sparse.linalg import splu
 
 
-def solver(basis, fbasis, y=None):
+def solver(basis, fbasis, y=None, rho=1):
     alpha1 = 1e-2
     alpha2 = 1e-2
-
-    rho = 1
 
     # test different kappa's, e.g., space-dependent here
     kappat_const = 0.3

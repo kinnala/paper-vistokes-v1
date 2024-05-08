@@ -12,11 +12,12 @@ lamhm1 = []
 
 uxfun = None
 
-for nnodes in [4, 8, 16]:#, 32, 64]:
+for nnodes in [4, 8, 16, 32, 64]:
     mesh = MeshQuad.init_tensor(
         np.linspace(-1, 1, nnodes),
         np.linspace(-1, 1, nnodes),
     ).to_meshtri(style='x')
+    # mesh = MeshTri.init_circle(nrefs=int(nnodes / 4))
 
     mesh.draw()
     plt.savefig('figs/uniform_{}_mesh.pdf'.format(nnodes))
@@ -48,7 +49,7 @@ for nnodes in [4, 8, 16]:#, 32, 64]:
 
     (u, ubasis), (p, pbasis), (lam, lambasis) = basis.split(x)
     #ubasis.plot(u, colorbar=True).show()
-    #pbasis.plot(p, colorbar=True, shading='gouraud').show()
+    pbasis.plot(p, colorbar=True, shading='gouraud').show()
     #lambasis.plot(lam)
     (lamx, lamxbasis), (lamy, lamybasis) = lambasis.split(lam)
     #lamxbasis.plot(lamx, colorbar=True, shading='gouraud')
@@ -56,29 +57,28 @@ for nnodes in [4, 8, 16]:#, 32, 64]:
     (ux, uxbasis), (uy, uybasis) = ubasis.split(u)
     #uxbasis.plot(np.sqrt(ux ** 2 + uy ** 2), colorbar=True, nrefs=3, shading='gouraud').show()
 
-    import matplotlib.pyplot as plt
-    dlamxfun = lamxbasis.interpolator(lamx)
-    xs = np.linspace(-0.999, 0.999, 200)
+    if 1:
+        dlamxfun = lamxbasis.interpolator(lamx)
+        xs = np.linspace(-0.999, 0.999, 200)
 
-    import matplotlib.pyplot as plt
-    dlamyfun = lamybasis.interpolator(lamy)
-    xs = np.linspace(-0.999, 0.999, 200)
+        dlamyfun = lamybasis.interpolator(lamy)
+        xs = np.linspace(-0.999, 0.999, 200)
 
-    fig = plt.figure()
-    fig.set_size_inches(5/1.2, 4/1.2)
-    plt.plot(xs, dlamxfun(np.array([0*xs + 1, xs])), 'k-')
-    plt.xlabel('$y$')
-    plt.ylabel('$\lambda_n$')
-    plt.tight_layout()
-    plt.savefig('figs/uniform_{}_lambdan.pdf'.format(nnodes), dpi=50)
+        fig = plt.figure()
+        fig.set_size_inches(5/1.2, 4/1.2)
+        plt.plot(xs, dlamxfun(np.array([0*xs + 1, xs])), 'k-')
+        plt.xlabel('$y$')
+        plt.ylabel('$\lambda_n$')
+        plt.tight_layout()
+        plt.savefig('figs/uniform_{}_lambdan.pdf'.format(nnodes), dpi=50)
 
-    fig = plt.figure()
-    fig.set_size_inches(5/1.2, 4/1.2)
-    plt.plot(xs, np.abs(dlamyfun(np.array([0*xs + 1, xs]))), 'k-')
-    plt.xlabel('$y$')
-    plt.ylabel('$\|{\\bf \lambda}_t\|$')
-    plt.tight_layout()
-    plt.savefig('figs/uniform_{}_lambdat.pdf'.format(nnodes), dpi=50)
+        fig = plt.figure()
+        fig.set_size_inches(5/1.2, 4/1.2)
+        plt.plot(xs, np.abs(dlamyfun(np.array([0*xs + 1, xs]))), 'k-')
+        plt.xlabel('$y$')
+        plt.ylabel('$\|{\\bf \lambda}_t\|$')
+        plt.tight_layout()
+        plt.savefig('figs/uniform_{}_lambdat.pdf'.format(nnodes), dpi=50)
 
     # calculate errors
 
@@ -132,7 +132,6 @@ for nnodes in [4, 8, 16]:#, 32, 64]:
 
 hs = np.array(hs)
 uh1 = np.sqrt(np.array(uh1) ** 2 + np.array(ul2) ** 2)
-import matplotlib.pyplot as plt
 
 width = 5 * 1.2
 height = 4 * 1.2
@@ -142,7 +141,7 @@ plt.loglog(hs, uh1, 'ko-')
 plt.loglog(hs, hs / hs[0] * uh1[0], 'k:')
 plt.xlabel('mesh parameter')
 plt.ylabel('error')
-plt.legend(['$\|\|{\\bf u}_{2h} - {\\bf u}_h\|\|_{1,\Omega}$', '$O(h)$'])
+plt.legend(['$\|{\\bf u}_{2h} - {\\bf u}_h\|_{1,\Omega}$', '$O(h)$'])
 plt.tight_layout()
 plt.grid('on')
 plt.savefig('figs/uniform_{}_uh1.pdf'.format(nnodes), dpi=50)
@@ -153,7 +152,7 @@ plt.loglog(hs, pl2, 'ko-')
 plt.loglog(hs, hs / hs[0] * pl2[0], 'k:')
 plt.xlabel('mesh parameter')
 plt.ylabel('error')
-plt.legend(['$\|\|p_{2h} - p_{h}\|\|_{0,\Omega}$', '$O(h)$'])
+plt.legend(['$\|p_{2h} - p_{h}\|_{0,\Omega}$', '$O(h)$'])
 plt.tight_layout()
 plt.grid('on')
 plt.savefig('figs/uniform_{}_pl2.pdf'.format(nnodes), dpi=50)
@@ -164,7 +163,7 @@ plt.loglog(hs, lamhm1, 'ko-')
 plt.loglog(hs, hs / hs[0] * lamhm1[0], 'k:')
 plt.xlabel('mesh parameter')
 plt.ylabel('error')
-plt.legend(['$\|\|h^{1/2}({\\bf \lambda}_{2h} - {\\bf \lambda}_h)\|\|_{0,\partial \Omega}$', '$O(h)$'])
+plt.legend(['$\|h^{1/2}({\\bf \lambda}_{2h} - {\\bf \lambda}_h)\|_{0,\partial \Omega}$', '$O(h)$'])
 plt.tight_layout()
 plt.grid('on')
 plt.savefig('figs/uniform_{}_lamhm1.pdf'.format(nnodes), dpi=50)
