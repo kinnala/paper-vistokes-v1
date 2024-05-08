@@ -21,7 +21,7 @@ def solver(basis, fbasis, y=None):
 
     @BilinearForm
     def bilinf(u, p, lam, v, q, mu, w):
-        return rho * dot(u, v) + 2 * nu * ddot(sym_grad(u), sym_grad(v)) - div(v) * p - div(u) * q
+        return rho * dot(u, v) + 2 * nu * ddot(sym_grad(u), sym_grad(v)) - div(v) * p + div(u) * q
 
     @LinearForm
     def mean(v, q, mu, w):
@@ -47,7 +47,7 @@ def solver(basis, fbasis, y=None):
             ])
         else:
             ddv = 0.
-        return - alpha1 * w.h ** 2 * dot(rho * u - nu * ddu + grad(p), rho * v - nu * ddv + grad(q))
+        return - alpha1 * w.h ** 2 * dot(rho * u - nu * ddu + grad(p), rho * v - nu * ddv - grad(q))
 
     def loadf(x):
         return np.array([-x[1], x[0]])
@@ -70,7 +70,7 @@ def solver(basis, fbasis, y=None):
             ])
         else:
             ddv = 0.
-        return - alpha1 * w.h ** 2 * dot(f, rho * v - nu * ddv + grad(q))
+        return - alpha1 * w.h ** 2 * dot(f, rho * v - nu * ddv - grad(q))
 
     @BilinearForm
     def mixed(u, p, lam, v, q, mu, w):
@@ -134,7 +134,7 @@ def solver(basis, fbasis, y=None):
     K = A + B + As + Bs
     F = f + fs
     K = bmat([[K, m[:, None]],
-              [m, None]], 'csr')
+              [np.array([m]), None]], 'csr')
     F = np.concatenate((F, [0.]))
     AA, bb, xx, II = condense(K, F,
                               I=np.concatenate((i1, [len(F)-1])),

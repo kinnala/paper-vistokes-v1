@@ -12,7 +12,7 @@ lamhm1 = []
 
 uxfun = None
 
-for nnodes in [4, 8, 16, 32, 64]:
+for nnodes in [4, 8, 16]:#, 32, 64]:
     mesh = MeshQuad.init_tensor(
         np.linspace(-1, 1, nnodes),
         np.linspace(-1, 1, nnodes),
