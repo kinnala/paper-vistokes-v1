@@ -4,14 +4,17 @@ import matplotlib.pyplot as plt
 from scipy.sparse.linalg import splu
 
 
-def solver(basis, fbasis, y=None, rho=1):
-    alpha1 = 1e-2
-    alpha2 = 1e-2
-
-    # test different kappa's, e.g., space-dependent here
-    kappat_const = 0.3
-    #kappat = lambda x, y: 10 - np.isclose(x, 1) * (10 - kappat_const) * (y < 1) * (y > -1)
-    kappat = lambda x, y: x * 0 + kappat_const
+def solver(
+        basis,
+        fbasis,
+        y=None,
+        rho=1,
+        kappat=lambda x, y: x * 0 + 0.3,
+        alpha1=1e-2,
+        alpha2=1e-2,
+        eps=4e-1,
+        dirichlet=False,
+):
 
     N = 1e4
     nu = 1.
@@ -129,6 +132,10 @@ def solver(basis, fbasis, y=None, rho=1):
     residual = []
 
     i1 = basis.get_dofs(elements=True).all(['u^1^1', 'u^2^1', 'u^2'])
+
+    if dirichlet is not False:
+        i1 = np.setdiff1d(i1, basis.get_dofs(dirichlet).all(['u^1^1', 'u^2^1']))
+
     K = A + B + As + Bs
     F = f + fs
     K = bmat([[K, m[:, None]],
@@ -175,7 +182,6 @@ def solver(basis, fbasis, y=None, rho=1):
         # Put1 = Pu[bndx] - Pun1
         # Put2 = Pu[bndy] - Pun2
 
-        eps = 4e-1
         sx = lam1 - eps * Pu[bndx]
         sy = lam2 - eps * Pu[bndy]
 
@@ -216,8 +222,8 @@ def solver(basis, fbasis, y=None, rho=1):
         (ux, uxbasis), (uy, uybasis) = ubasis.split(u)
         (lamx, lamxbasis), (lamy, lamybasis) = lambasis.split(lam)
 
-    #plt.figure()
-    #plt.loglog(uzawa)
-    #plt.show()
+    plt.figure()
+    plt.loglog(residual)
+    plt.show()
 
     return y

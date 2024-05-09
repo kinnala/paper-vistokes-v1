@@ -4,11 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-mesh = MeshTri.init_circle(nrefs=4).smoothed()
-# mesh = MeshQuad.init_tensor(
-#     np.linspace(-1, 1, 32),
-#     np.linspace(-1, 1, 32),
-# ).to_meshtri(style='x')
+mesh = MeshQuad.init_tensor(
+    np.linspace(-1, 1, 32),
+    np.linspace(-1, 1, 32),
+).to_meshtri(style='x')
 
 mesh.draw()
 e = (ElementVector(ElementTriP1())
@@ -24,8 +23,12 @@ from uzawa import solver
 x = solver(
     basis,
     fbasis,
-    rho=1,
-    kappat=lambda x, y: 10 - (y < -0.5) * (10 - 0.2),
+    rho=0,
+    alpha1=1e-2,
+    alpha2=1e-2,
+    eps=1e-1,
+    dirichlet=lambda x: np.isclose(x[1], 1),
+    kappat=lambda x, y: 10 - np.isclose(y, -1) * (10 - 0.2),
 )
 
 (u, ubasis), (p, pbasis), (lam, lambasis) = basis.split(x)
