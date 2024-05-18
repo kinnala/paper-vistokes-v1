@@ -2,29 +2,32 @@ This repository contains numerical experiments for the paper
 "Stabilised finite element method for Stokes problem with nonlinear
 slip condition" by Tom Gustafsson and Juha Videman.
 
-The numerical experiments have been performed using Python 3.9.6
+The convergence study has been performed using Python 3.9.6
 interpreter by executing the file "convergence2.py" with a command
 
->> python3 convergence.py
+>> python3 convergence2.py
 
-This will write the output files to "figs/".
+This will write output files to "figs/".
+The curved boundary experiment can be run as
 
-We expect any version of the Python interpreter between 3.8 and 3.11
+>> python3 nontrivial.py
+
+While untested, we expect any version of the Python interpreter between 3.8 and 3.11
 to work equally well.
 
-Package dependencies are used by the source code in "convergence2.py"
-and "uzawa.py".  These dependencies are listed in "requirements.txt"
-file.  Assuming that all the dependecies are still available in PyPI
-or some other package repository, the most straightforward way to
-install these dependencies is by running
+Some Python dependencies are used by the source code in
+"convergence2.py", "nontrivial.py" and "uzawa.py".  These dependencies
+are listed in "requirements.txt" file.  Assuming that all the
+dependecies are still available in PyPI or some other package
+repository, the most straightforward way to install these dependencies
+is by running
 
 >> python3 -m pip install -r requirements.txt
 
 Expecting that in future at least some of the dependency versions
 might become unavailable, we have downloaded the dependencies for
-Python 3.9 and some of the popular platforms (at the time of writing)
-and included them within the Zenodo archive of this repository under
-"deps/".
+Python 3.9 (on some platforms) and included them within the Zenodo archive of
+this repository under "deps/".
 
 This has been achieved by running commands such as
 
@@ -42,5 +45,5 @@ follows:
 	   -f ./deps/manylinux2014_x86_64 \
 	   -r requirements.txt
 
-In case the platforms have become unavailable, the best option is to
-rely on virtualization of one of the platforms.
+In case the platform has become unavailable, the best option is to
+rely on virtualization.
